@@ -56,6 +56,7 @@ import java.util.OptionalInt;
  * Evaluates a hope expression
  */
 public class Evaluator {
+    @Getter
     private static final ObjectMapper mapper = new ObjectMapper();
 
     static {
