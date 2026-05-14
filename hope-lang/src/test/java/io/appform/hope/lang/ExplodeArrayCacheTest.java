@@ -32,6 +32,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import io.appform.hope.core.Evaluatable;
 import io.appform.hope.core.exceptions.errorstrategy.InjectValueErrorHandlingStrategy;
 import io.appform.hope.core.functions.FunctionRegistry;
 import io.appform.hope.core.visitors.Evaluator;
@@ -43,8 +44,8 @@ import lombok.val;
  * Tests that verify:
  * 1. explodeArray correctly resolves arrays via JsonPointer (the fixed code path).
  * 2. The per-evaluation cache in EvaluationContext is actually used by explodeArray —
- *    i.e. a given path is resolved only once even when referenced by multiple arr.*
- *    calls sharing the same EvaluationContext.
+ * i.e. a given path is resolved only once even when referenced by multiple arr.*
+ * calls sharing the same EvaluationContext.
  */
 class ExplodeArrayCacheTest {
 
@@ -158,8 +159,9 @@ class ExplodeArrayCacheTest {
         assertTrue(rule1.accept(logicEvaluator));
         assertTrue(rule2.accept(logicEvaluator));
 
-        assertEquals(1, ctx.getJsonPathEvalCache().size(),
-                "$.tags should be cached after the first evaluation; second call must hit the cache");
+        assertEquals(1,
+                     ctx.getJsonPathEvalCache().size(),
+                     "$.tags should be cached after the first evaluation; second call must hit the cache");
     }
 
     // -------------------------------------------------------------------------
@@ -188,12 +190,13 @@ class ExplodeArrayCacheTest {
         assertTrue(rule1.accept(logicEvaluator));
         assertTrue(rule2.accept(logicEvaluator));
 
-        assertEquals(1, ctx.getJsonPointerEvalCache().size(),
-                "/tags should be cached after the first evaluation; second call must hit the cache");
+        assertEquals(1,
+                     ctx.getJsonPointerEvalCache().size(),
+                     "/tags should be cached after the first evaluation; second call must hit the cache");
     }
 
     @SneakyThrows
-    private io.appform.hope.core.Evaluatable parse(String rule) {
+    private Evaluatable parse(String rule) {
         return new HopeParser(new StringReader(rule)).parse(functionRegistry);
     }
 }
