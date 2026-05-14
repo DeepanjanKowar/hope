@@ -15,6 +15,7 @@
 package io.appform.hope.core.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.NullNode;
@@ -53,6 +54,8 @@ import java.util.stream.StreamSupport;
  */
 @Slf4j
 public class Converters {
+
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private Converters() {
     }
@@ -641,10 +644,14 @@ public class Converters {
         final Map<String, JsonNode> jsonPathEvalCache = evaluationContext.getJsonPathEvalCache();
         return jsonPathEvalCache
                 .computeIfAbsent(path, key -> {
-                    final JsonNode value = evaluationContext.getJsonContext().read(jsonPathValue.getJsonPath());
-                    return null == value
-                           ? NullNode.getInstance()
-                           : value;
+                    final Object result = evaluationContext.getJsonContext().read(jsonPathValue.getJsonPath());
+                    if (result == null) {
+                        return NullNode.getInstance();
+                    }
+                    if (result instanceof JsonNode jsonNode) {
+                        return jsonNode;
+                    }
+                    return MAPPER.valueToTree(result);
                 });
     }
 
