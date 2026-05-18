@@ -267,8 +267,7 @@ public class Converters {
         return node.accept(new VisitorAdapter<>(() -> defaultValue) {
             @Override
             public List<Value> visit(JsonPathValue jsonPathValue) {
-                final JsonNode value = evaluationContext.getJsonContext()
-                        .read(jsonPathValue.getPath());
+                final JsonNode value = nodeForJsonPath(jsonPathValue, evaluationContext);
                 if (null == value || value.isNull() || value.isMissingNode()) {
                     return errorHandlingStrategy.handleMissingValue(
                             jsonPathValue.getPath(),
@@ -291,8 +290,7 @@ public class Converters {
 
             @Override
             public List<Value> visit(JsonPointerValue jsonPointerValue) {
-                final JsonNode value = evaluationContext.getRootNode()
-                        .at(jsonPointerValue.getJsonPointer());
+                final JsonNode value = nodeForJsonPointer(jsonPointerValue, evaluationContext);
                 if (null == value || value.isNull() || value.isMissingNode()) {
                     return errorHandlingStrategy.handleMissingValue(
                             jsonPointerValue.getPointer(),
