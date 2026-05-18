@@ -162,6 +162,8 @@ class ExplodeArrayCacheTest {
         assertEquals(1,
                      ctx.getJsonPathEvalCache().size(),
                      "$.tags should be cached after the first evaluation; second call must hit the cache");
+        assertTrue(ctx.getJsonPathEvalCache().containsKey("$.tags"),
+                   "cache key must be the actual path '$.tags'");
     }
 
     // -------------------------------------------------------------------------
@@ -193,6 +195,8 @@ class ExplodeArrayCacheTest {
         assertEquals(1,
                      ctx.getJsonPointerEvalCache().size(),
                      "/tags should be cached after the first evaluation; second call must hit the cache");
+        assertTrue(ctx.getJsonPointerEvalCache().containsKey("/tags"),
+                   "cache key must be the actual pointer '/tags'");
     }
 
     @SneakyThrows
